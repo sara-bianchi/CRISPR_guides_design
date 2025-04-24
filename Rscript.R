@@ -3,6 +3,7 @@ library(crisprBase)
 library(crisprDesign)
 library(crisprDesignData)
 library(BSgenome.Hsapiens.UCSC.hg38)
+library(BSgenome.Hsapiens.UCSC.hg19)
 library(Rbowtie)
 library(crisprBwa)
 library(dplyr)
@@ -60,6 +61,7 @@ if(length(unique(na.omit(settings$genome))) != 1 | settings$genome[1] %in% c("hg
 
 #alignment
 if(alignment == TRUE){
+  dir.create(paste0("/home/shared_folder/Output_", current_time, "/genome_", genome))
   bowtie_build(fasta,
                outdir = paste0("/home/shared_folder/Output_", current_time, "/genome_", genome, "/"),
                force = TRUE,

@@ -1,7 +1,7 @@
 # CRISPR_guides_design
 Automated pipeline for customizable CRISPRa and CRISPRi guides design
 
-# environment set up and installation
+# Environment set up and installation
 All the installations are provided in the docker published on our repository as hedgelab/crispr:image1.
 To use this pipeline is highly recommended to use it through the docker image to ensure reproducibility, alernatively it is possible to manually repeat the installation on your computer following the steps in the Dockerfile (optimised for a linux bash shell).
 
@@ -10,7 +10,7 @@ Ensure that the RAM and CPU allocated to Docker are sufficient to run the analys
 
 Once Docker is installed and properly configured, activate the Docker engine directly opening the Docker Desktop application or by running on your terminal: start docker
 
-# input files preparation
+# Input files preparation
 To run the analysis it is required to select a working directory on your computer. All the input files must be located in this directory, either directly or organized in subfolders, and the output will be written in this directory as well. This is important as the docker container which will be created needs to be connected with a specific folder which will be shared between your computer and the container itself. Since all the data within this folder will be accessed through the container it is important to use the prefix /home/shared_folder/ at the beginning of each path required. This will be the path under which your folder will be located in your container. For example, if your folder is D:/home/data/CRISPR_design/index, and my working directory is CRISPR_design, to indicate the index folder I should write /home/shared_folder/index.
 
 Within this folder it is necessary to locate:
@@ -22,7 +22,7 @@ Within this folder it is necessary to locate:
 - genome information: files needed for the indexing. If the Bowtie index has already been created, the genome folder is needed, else the FASTA file is necessary. For hg38 it is possible to use the https://hgdownload.soe.ucsc.edu/goldenpath/hg38/bigZips/hg38.fa.gz, and for hg19 https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz. At the moment the pipeline can only support these genomes but it will be updated with other versions and species.
 - chromatin accessibility information: to evaluate if the region in which the guide will be alligned is accessible it is important to compare the alignment results with a chromatin accessibility ATAC-Seq track in BedGraph format. If your file is provided in another format like a BigWig it is necessary to convert it, for example with the UCSC bigWigToBedGraph in.bigWig out.bedGraph command (https://open.bioqueue.org/home/knowledge/showKnowledge/sig/ucsc-bigwigtobedgraph) This track must be chosen dependently on the cell type you are interested in. For example, for hESC and subsequent steps of mesoderm to cardiac differentiation it is possible to use the GSE106689 accession number.
 
-# running the pipeline
+# Running the pipeline
 Once your input files are correctly set up it is possible to easily run the pipeline in two steps: open your terminal and write
 
 docker run -d -v  [Path/To/Your/Folder]:/home/shared_folder --name [container_name] hedgelab/crispr:image1
@@ -33,7 +33,7 @@ docker exec -it [container_name] Rscript /home/shared_folder/Rscript.R
 
 This command will run the Rscript.R in the container of the provided name (which must be the same used previously), and the output will be written in the Output_yymmdd directory.
 
-# rpipeline description and output interpretation
+# Pipeline description and output interpretation
 The analysis consists of three main steps plus an optional one:
 - optional step: if the needs to be generated the pipeline will create it from the provided fasta file, and locate it in the output folder into the directory called genome_hg38 or genome_hg19 dependening on the genome type used.
 - 1^st step: the CrisprVerse pipeline https://github.com/crisprVerse is used for the identification of the potential guides in the selected window, with the selected length, with a PAM site dependent on the nuclease on the selected indexed genome.

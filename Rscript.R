@@ -2,8 +2,6 @@
 library(crisprBase)
 library(crisprDesign)
 library(crisprDesignData)
-library(BSgenome.Hsapiens.UCSC.hg38)
-library(BSgenome.Hsapiens.UCSC.hg19)
 library(Rbowtie)
 library(crisprBwa)
 library(dplyr)
@@ -33,17 +31,13 @@ if(length(unique(na.omit(settings$spacer_len))) != 1 | as.integer(settings$space
   stop("invalid argument spacer_len")
 } else{spacer_len = as.integer(settings$spacer_len[1])}
 
-if(length(unique(na.omit(settings$alignment))) != 1 | as.logical(settings$alignment[1]) == "NA"){
-  stop("invalid argument alignment")
-} else{alignment = as.logical(settings$alignment[1])}
+if(length(unique(na.omit(settings$indexing))) != 1 | as.logical(settings$indexing[1]) == "NA"){
+  stop("invalid argument indexing")
+} else{alignment = as.logical(settings$indexing[1])}
 
 if(length(unique(na.omit(settings$acessibility))) != 1 | file.exists(settings$acessibility[1]) == FALSE){
   stop("invalid argument for acessibility")
 } else{acessibility = as.character(settings$acessibility[1])}
-
-if(length(unique(na.omit(settings$alignment))) != 1 | as.logical(settings$alignment[1]) == "NA"){
-  stop("invalid argument alignment")
-} else{alignment = as.logical(settings$alignment[1])}
 
 if(alignment == TRUE){
   if(length(unique(na.omit(settings$fasta))) != 1 | file.exists(settings$fasta[1]) == FALSE){
@@ -55,9 +49,12 @@ if(alignment == TRUE){
   } else{genome_dir = as.character(settings$genome_dir[1])}
 }
 
-if(length(unique(na.omit(settings$genome))) != 1 | settings$genome[1] %in% c("hg38", "hg19")){
+if(length(unique(na.omit(settings$genome))) != 1 | !settings$genome[1] %in% c("hg38", "hg19")){
   stop("invalid argument for genome")
-} else{genome = as.character(settings$genome[1])}
+} else{genome = as.character(settings$genome[1])
+      if(genome == "hg38"){library(BSgenome.Hsapiens.UCSC.hg38}
+      if(genome == "hg19"){BiocManager::install("BSgenome.Hsapiens.UCSC.hg19")
+                          library(BSgenome.Hsapiens.UCSC.hg19)}
 
 #alignment
 if(alignment == TRUE){
@@ -215,3 +212,4 @@ for(gene in genes){
 }
 
                              
+
